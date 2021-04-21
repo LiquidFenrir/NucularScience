@@ -101,6 +101,8 @@ title::title(nc::status& status, bn::sprite_text_generator& text_generator) :
     _hide_text(_continue_text_sprites);
     _hide_text(_start_text_sprites);
     _hide_text(_how_to_play_sprites);
+
+    status.start_bgm();
 }
 
 UpdateResult title::update()

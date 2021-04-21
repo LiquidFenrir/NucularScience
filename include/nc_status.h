@@ -81,6 +81,9 @@ public:
     void initialize();
     void save(bool game_in_progress);
 
+    void start_bgm();
+    void stop_bgm();
+
     [[nodiscard]] bool have_started_game() const;
     [[nodiscard]] bool completed_tutorial() const;
     void mark_tutorial_as_complete();

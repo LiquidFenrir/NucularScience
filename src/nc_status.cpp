@@ -7,6 +7,9 @@
 #include "bn_sram.h"
 #include "bn_cstring.h"
 
+#include "bn_music_items.h"
+#include "bn_fixed.h"
+
 namespace nc
 {
 
@@ -50,6 +53,9 @@ int ItemType::sprite_index() const
             return 17;
         case Type::EnergyExtractor:
             return 18;
+        default:
+            BN_ERROR("CANNOT HAPPEN");
+            return 0; // won't reach
     }
 }
 
@@ -150,7 +156,23 @@ void status::save(bool game_in_progress)
     }
 
     bn::memcpy(&_money_owned, &save_data[110], sizeof(_money_owned));
+    bn::sram::write(save_data);
 }
+
+static bool bgm_playing = false;
+void status::start_bgm()
+{
+    if(!bgm_playing)
+    {
+        bgm_playing = true;
+        bn::music_items::main_theme.play(0.25, true);
+    }
+}
+void stop_bgm()
+{
+    bn::music_items::main_theme.play(0, false);
+}
+
 bool status::have_started_game() const
 {
     return _is_game_started;
