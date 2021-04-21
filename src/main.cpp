@@ -10,6 +10,8 @@
 #include "bn_bg_palettes.h"
 
 #include "variable_8x16_sprite_font.h"
+#include "bn_regular_bg_items_splash_jam.h"
+#include "bn_regular_bg_items_splash_dev.h"
 
 #include "nc_status.h"
 #include "nc_scene.h"
@@ -73,10 +75,13 @@ int main()
                     scene.reset(new nc::intro(text_generator));
                     break;
                 case nc::scene_type::TRANSITION_TO_SPLASH:
-                    scene.reset(new nc::transition(bn::color(23, 21, 27), nc::scene_type::SPLASH));
+                    scene.reset(new nc::transition(bn::color(0, 0, 0), nc::scene_type::SPLASH_DEV));
                     break;
-                case nc::scene_type::SPLASH:
-                    scene.reset(new nc::splash);
+                case nc::scene_type::SPLASH_DEV:
+                    scene.reset(new nc::splash(bn::regular_bg_items::splash_dev, bn::color(23, 21, 27), nc::scene_type::SPLASH_JAM));
+                    break;
+                case nc::scene_type::SPLASH_JAM:
+                    scene.reset(new nc::splash(bn::regular_bg_items::splash_jam, bn::color(0, 18, 31), nc::scene_type::TITLE));
                     break;
                 case nc::scene_type::TITLE:
                     scene.reset(new nc::title(status, text_generator));

@@ -15,7 +15,8 @@ enum class scene_type
 {
     INTRO,
     TRANSITION_TO_SPLASH,
-    SPLASH,
+    SPLASH_DEV,
+    SPLASH_JAM,
 
     TITLE,
     TITLE_TUTORIAL,

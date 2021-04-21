@@ -5,29 +5,29 @@
 
 #include "nc_splash.h"
 
-#include "bn_colors.h"
-#include "bn_regular_bg_items_splash.h"
-// #include "bn_music_items.h"
-
 namespace nc
 {
 
 namespace
 {
+    constexpr int _fade_time = 30;
+    constexpr int _stay_time = 45;
     [[nodiscard]] bn::bg_palettes_fade_to_action _create_bg_fade_in_action()
     {
-        bn::bg_palettes::set_fade(bn::color(23, 21, 27), 1);
-        return bn::bg_palettes_fade_to_action(40, 0);
+        bn::bg_palettes::set_fade(*bn::bg_palettes::transparent_color(), 1);
+        return bn::bg_palettes_fade_to_action(_fade_time, 0);
     }
     [[nodiscard]] bn::bg_palettes_fade_to_action _create_bg_fade_out_action()
     {
-        return bn::bg_palettes_fade_to_action(40, 1);
+        return bn::bg_palettes_fade_to_action(_fade_time, 1);
     }
 }
 
-splash::splash() :
+splash::splash(const bn::regular_bg_item& splash_image, const bn::color& to_color, const nc::scene_type after) :
     _bg_fade_in_action(_create_bg_fade_in_action()),
-    _bg(bn::regular_bg_items::splash.create_bg(0, 0))
+    _bg(splash_image.create_bg(0, 0)),
+    _to_color(to_color),
+    _after(after)
 {
 }
 
@@ -41,9 +41,9 @@ UpdateResult splash::update()
         if(_bg_fade_in_action->done())
         {
             _bg_fade_in_action.reset();
-            bn::bg_palettes::set_fade_color(bn::color(0, 18, 31));
+            bn::bg_palettes::set_fade_color(_to_color);
             _bg_fade_out_action = _create_bg_fade_out_action();
-            _counter = 40;
+            _counter = _stay_time;
         }
     }
     else if(_counter != 0)
@@ -55,12 +55,11 @@ UpdateResult splash::update()
         _bg_fade_out_action->update();
         if(_bg_fade_out_action->done())
         {
-            bn::bg_palettes::set_transparent_color(bn::color(0, 18, 31));
+            bn::bg_palettes::set_transparent_color(_to_color);
             _bg.reset();
             _bg_fade_out_action.reset();
             bn::bg_palettes::set_fade_intensity(0);
-            result = scene_type::TITLE;
-            // bn::music_items::bgm.play(0.375, true);
+            result = _after;
         }
     }
 
