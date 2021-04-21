@@ -41,7 +41,7 @@ research_screen::research_screen(nc::status& status, bn::sprite_text_generator& 
     {
         const int column = i / 2;
         const int row = i % 2;
-        const int x = -(UPGRADES_WIDTH * 32 / 2) + (column * 32);
+        const int x = -(UPGRADES_WIDTH * 32 / 2) + (column * 32) + (32 / 2);
         const int y = -48 + (row * 32);
         _back_sprites.push_back(bn::sprite_items::upgrade_back.create_sprite(x, y));
         _back_sprites.back().set_bg_priority(3);
@@ -61,6 +61,11 @@ UpdateResult research_screen::update()
     if(bn::keypad::a_pressed())
     {
         bn::sound_items::buy_upgrade.play(0.5);
+    }
+    else if(bn::keypad::b_pressed())
+    {
+        _current_page = 1 - _current_page; // toggle between 0 and 1
+        _set_title_text(UPGRADE_PAGE_NAME[_current_page], _text_generator);
     }
     else if(bn::keypad::left_pressed())
     {
@@ -122,11 +127,10 @@ UpdateResult research_screen::update()
     return result;
 }
 
-
 void research_screen::_reset_cursor_positions()
 {
     auto& cursor = _status.get_cursor();
-    const int x = -(UPGRADES_WIDTH * 32 / 2) + (cursor.column * 32);
+    const int x = -(UPGRADES_WIDTH * 32 / 2) + (cursor.column * 32) + (32 / 2);
     const int y = -48 + (cursor.row * 32);
     _cursor_sprite.set_position(x, y);
 }
